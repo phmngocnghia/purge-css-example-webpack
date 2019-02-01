@@ -1,6 +1,9 @@
 var UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const PurgecssPlugin = require('purgecss-webpack-plugin')
+const glob = require('glob')
+const path = require('path')
 
 module.exports = {
   mode: "production",
@@ -34,11 +37,14 @@ module.exports = {
   // plugin
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./index.html"
+      template: "./src/index.html"
     }),
     new MiniCssExtractPlugin({
       filename: "[name].css",
       chunkFilename: "[id].css"
-    })
+    }),
+    new PurgecssPlugin({
+      paths: glob.sync(`${path.join(__dirname, 'src')}/**/*`,  { nodir: true }),
+    }),
   ]
 };
